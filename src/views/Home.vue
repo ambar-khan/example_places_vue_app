@@ -1,9 +1,14 @@
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
+    <h2>Add a new place</h2>
+    <p>Name:<input type='text' v-model='name'></p>
+    <p>Address:<input type='text' v-model='address'></p>
+    <button v-on:click="createPlace()">Add Place</button>
+
     <div v-for="place in places">
       {{ place.name }}
-      </div>
+    </div>
   </div>
 </template>
 
@@ -18,6 +23,8 @@ export default {
     return {
       message: "Places!",
       places: [],
+      name: "",
+      address: "",
     };
   },
   created: function () {
@@ -30,6 +37,17 @@ export default {
       axios.get("/api/places").then((response) => {
         console.log(response.data);
         this.places = response.data;
+      });
+    },
+    createPlace: function () {
+      console.log("creating product...");
+      var params = {
+        name: this.name,
+        address: this.address,
+      };
+      axios.post("/api/places", params).then((response) => {
+        console.log(response.data);
+        this.places.push(response.data);
       });
     },
   },
